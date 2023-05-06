@@ -2,24 +2,25 @@ const secret = "SADASDAJHKLSB"
 
 // file and child process things
 
-const path = require('path');
-const fs = require('fs')
-const { WriteStream } = require('fs');
-const { spawn } = require('child_process');
+import path from 'path';
+import fs from 'fs';
+import { WriteStream } from 'fs';
+import { spawn } from 'child_process';
 
 // express + socket.io
 
-const express = require('express');
-
+import express from 'express';
+import http from 'http';
+import { Server } from "socket.io";
+import bodyParser from 'body-parser';
+const jsonParser = bodyParser.json()
+const urlencodedParser = bodyParser.urlencoded({ extended: false })
 const app = express();
-const http = require('http');
 const server = http.createServer(app);
-const { Server } = require("socket.io");
-const { type } = require('os');
 const io = new Server(server);
 const port = 5000
 
-// mysql database
+// logging server
 
 /*
 
@@ -47,21 +48,32 @@ const appPosts = (info) => {
   let currentLogs = []
   let isRunning = false
   
-  app.post(`/${info.type}/${info.serverName}/start`, (req, res) => {
+  app.post(`/${info.type}/${info.serverName}/start`, (_req, res) => {
 
     let i = 0
+    const month: number = new Date().getMonth()
+    const date: number = new Date().getDate()
+    const year: number = new Date().getFullYear()
 
     if (!isRunning) {
 
-      if (fs.existsSync(fs.join(__dirname, )`${__dirname}/${info.type}Logs/${info.serverName}Log.log`)) {
-        fs.unlink(`${__dirname}/${info.type}Logs/${info.serverName}Log.log`, (err) => {
+      // if (fs.existsSync(path.join(`${__dirname}/${info.type}Logs/${info.serverName}Log.log`))) {
+      //   fs.unlink(`${__dirname}/${info.type}Logs/${info.serverName}Log.log`, (err) => {
+      //     if (err) {
+      //       throw err;
+      //     }
+      //   });
+      // }
+
+      if (fs.existsSync(path.join("database", "server_logs", info.type, info.serverName, `${month}-${date}-${year}.lo`))) {
+        fs.unlink(path.join("database", "server_logs", info.type, info.serverName, `${month}-${date}-${year}.log`), (err) => {
           if (err) {
             throw err;
           }
         });
       }
 
-      const writeStream = fs.createWriteStream(`${__dirname}/logs/${info.type}/${info.serverName}Log.log`);
+      let writeStream = fs.createWriteStream(path.join("database", "server_logs", info.type, info.serverName, `${month}-${date}-${year}.log`));
 
       process = spawn('bash', [`serverScripts/${info.type}/${info.serverName}.sh`]);
 
@@ -79,7 +91,7 @@ const appPosts = (info) => {
         console.error(data.toString())
       })
 
-      process.on('close', (code) => {
+      process.on('close', (code: { toString: () => string; }) => {
         console.log('child process exited with code ' + code.toString());
         isRunning = false;
         io.emit(`${info.type}-${info.serverName}-status`, {status: true});
@@ -90,7 +102,7 @@ const appPosts = (info) => {
     } else res.sendStatus(400)
   })
 
-  app.post(`/${info.type}/${info.serverName}/logs`, (req, res) => {
+  app.post(`/${info.type}/${info.serverName}/logs`, (_req, res) => {
     fs.readFile(`${__dirname}/logs/${info.type}/${info.serverName}Log.log`, 'utf8', (err, data) => {
       if (err) {
         console.error(err);
@@ -100,7 +112,7 @@ const appPosts = (info) => {
     });
   })
 
-  app.post(`/${info.type}/${info.serverName}/check`, (req, res) => {
+  app.post(`/${info.type}/${info.serverName}/check`, (_req, res) => {
     res.send(isRunning)
   })
 
@@ -119,9 +131,9 @@ const appPosts = (info) => {
 
 const minecraftServer = (serverName) => {
 
-  info = {
+  const info = {
     type:"minecraft",
-    serverName,
+    serverName:serverName,
   }
 
   appPosts(info);
@@ -132,14 +144,14 @@ const minecraftServer = (serverName) => {
 
 minecraftServer("vanilla119")
 
-app.post('/', (req, res) => {
+app.post('/', (_req, res) => {
   io.emit("hi", {content: "hi"})
   res.sendStatus(200)
 });
 
 // server startup
 
-io.on('connection', (socket) => {
+io.on('connection', (_socket) => {
   console.log('a user connected');
 });
 

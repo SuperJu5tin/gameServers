@@ -6,7 +6,7 @@ import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { io } from 'socket.io-client';
 
-function MinecraftServer() {
+const MinecraftServer = () => {
 
   const router = useRouter()
   const { id } = router.query
@@ -66,6 +66,7 @@ function MinecraftServer() {
         marginTop:"5vh",
       }}>
         <Box sx={{
+          borderRadius:"30px",
           background:"red"
         }}>
           s
@@ -82,13 +83,13 @@ function MinecraftServer() {
   )
 }
 
-export const getServerSideProps = async (context) => {
-  // Fetch data from external API
-  const res = await fetch(`http://localhost:5000/${context.query.id}`)
-  const data = await res.json()
+// export const getServerSideProps = async (context) => {
+//   // Fetch data from external API
+//   const res = await fetch(`http://localhost:5000/${context.query.id}`)
+//   const data = await res.json()
 
-  // Pass data to the page via props
-  return { props: { data } }
-}
+//   // Pass data to the page via props
+//   return { props: { data } }
+// }
 
 export default MinecraftServer

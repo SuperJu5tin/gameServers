@@ -1,16 +1,27 @@
 {
-  "name": "backend_act2",
+  "name": "big_backend",
   "version": "1.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "dist/index.js",
   "scripts": {
+    "build": "tsc",
+    "prestart": "npm run build",
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "",
   "license": "ISC",
+  "devDependencies": {
+    "@types/express": "^4.17.17",
+    "@types/node": "^18.15.11",
+    "@types/socket.io": "^3.0.2",
+    "typescript": "^5.0.3"
+  },
+  "type": "module",
   "dependencies": {
+    "body-parser": "^1.20.2",
     "express": "^4.18.2",
     "mysql": "^2.18.1",
-    "socket.io": "^4.5.4"
+    "socket.io": "^4.6.1"
   }
 }
