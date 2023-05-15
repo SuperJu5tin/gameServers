@@ -56,7 +56,6 @@ const MinecraftServer = () => {
         </ButtonGroup>
       </Box>
       <Box sx={{
-        
         borderRadius:"30px",
         margin:"auto",
         background:"green",

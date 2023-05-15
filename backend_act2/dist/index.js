@@ -37,7 +37,7 @@ const appPosts = (info) => {
     let process;
     let currentLogs = [];
     let isRunning = false;
-    app.post(`/${info.type}/${info.serverName}/start`, (_req, res) => {
+    app.post(`/${info.type}/${info.serverName}/start/${secret}`, (_req, res) => {
         let i = 0;
         const month = new Date().getMonth();
         const date = new Date().getDate();
@@ -50,7 +50,7 @@ const appPosts = (info) => {
             //     }
             //   });
             // }
-            if (fs.existsSync(path.join("database", "server_logs", info.type, info.serverName, `${month}-${date}-${year}.lo`))) {
+            if (fs.existsSync(path.join("database", "server_logs", info.type, info.serverName, `${month}-${date}-${year}.log`))) {
                 fs.unlink(path.join("database", "server_logs", info.type, info.serverName, `${month}-${date}-${year}.log`), (err) => {
                     if (err) {
                         throw err;
@@ -80,7 +80,7 @@ const appPosts = (info) => {
         else
             res.sendStatus(400);
     });
-    app.post(`/${info.type}/${info.serverName}/logs`, (_req, res) => {
+    app.post(`/${info.type}/${info.serverName}/logs/${secret}`, (_req, res) => {
         fs.readFile(`${__dirname}/logs/${info.type}/${info.serverName}Log.log`, 'utf8', (err, data) => {
             if (err) {
                 console.error(err);
@@ -89,10 +89,10 @@ const appPosts = (info) => {
             res.send(data.toString().split(/\r?\n/));
         });
     });
-    app.post(`/${info.type}/${info.serverName}/check`, (_req, res) => {
+    app.post(`/${info.type}/${info.serverName}/check/${secret}`, (_req, res) => {
         res.send(isRunning);
     });
-    app.post(`/${info.type}/${info.serverName}/command`, (req, res) => {
+    app.post(`/${info.type}/${info.serverName}/command/${secret}`, (req, res) => {
         if (isRunning) {
             console.log(req.body.response);
             process.stdin.write(`${req.body.response}\n`);
@@ -111,9 +111,12 @@ const minecraftServer = (serverName) => {
     };
     appPosts(info);
 };
-// serverlist
+let serverList = [{
+        serverName: "",
+        serverType: ''
+    }];
 minecraftServer("vanilla119");
-app.post('/', (_req, res) => {
+app.post(`/${secret}`, (_req, res) => {
     io.emit("hi", { content: "hi" });
     res.sendStatus(200);
 });
