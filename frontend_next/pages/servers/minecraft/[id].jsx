@@ -1,5 +1,5 @@
 import Navbar from '@/pages/Navbar';
-import { Button, ButtonGroup, Container } from '@mui/material';
+import { Button, ButtonGroup, Container, Input } from '@mui/material';
 import { Box } from '@mui/system';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
@@ -18,7 +18,7 @@ const MinecraftServer = () => {
 
   useEffect(() => {
     document.body.style.margin = 0
-    document.body.style.background = "rgb(77, 46, 18)"
+    document.body.style.background = "#756049"
     document.body.style.color = "white"
   }, []);
 
@@ -48,7 +48,7 @@ const MinecraftServer = () => {
         padding:"7vh",
         display:"flex",
         justifyContent:"center",
-        background:"linear-gradient(rgb(30, 200, 150), rgb(77, 46, 18))",
+        background:"linear-gradient(rgb(30, 200, 150), #756049)",
       }}>
         <ButtonGroup variant='contained'>
           <Button>Start Server</Button>
@@ -58,23 +58,31 @@ const MinecraftServer = () => {
       <Box sx={{
         borderRadius:"30px",
         margin:"auto",
-        background:"green",
+        background:"#867861",
         textAlign:"center",
         width:"80vw",
-        padding:"1vw",
+        paddingBottom:"3vh",
         marginTop:"5vh",
+        marginBottom:"5vh"
       }}>
         <Box sx={{
-          borderRadius:"30px",
-          background:"red"
+          borderRadius:"30px 30px 0 0",
+          background:"#7a6a51",
+          margin:"auto",
+          paddingTop:"1vh",
+          paddingBottom:".5vh",
+          paddingLeft:"1vw",
+          paddingRight:"1vw",
         }}>
-          s
+          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box this little box is a nice little box and is where I am able to vibe without fear of making others dslkfj</p>
+          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
+          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
+          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
+          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
+          <p>{serverLogs}</p>
         </Box>
-        <Box sx={{
-          margin:"0",
-          background:"blue",
-        }}>
-          <h4>{serverLogs}</h4>
+        <Box>
+          <Input width />
         </Box>
       </Box>
     </>

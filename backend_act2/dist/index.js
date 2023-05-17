@@ -111,11 +111,16 @@ const minecraftServer = (serverName) => {
     };
     appPosts(info);
 };
-let serverList = [{
-        serverName: "",
-        serverType: ''
-    }];
-minecraftServer("vanilla119");
+let serverList = [{ serverName: "vanilla119", serverType: "minecraft" }, { serverName: "", serverType: "" }];
+for (const currentServerInfo of serverList) {
+    appPosts(currentServerInfo);
+}
+app.post(`add_server/${secret}`, (req, res) => {
+    const info = { serverName: req.body.name, serverType: req.body.type };
+    serverList.push(info);
+    appPosts(info);
+    res.sendStatus(400);
+});
 app.post(`/${secret}`, (_req, res) => {
     io.emit("hi", { content: "hi" });
     res.sendStatus(200);
