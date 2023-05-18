@@ -11,6 +11,7 @@ const MinecraftServer = () => {
   const router = useRouter()
   const { id } = router.query
   const server = id
+  const secret = process.env.REACT_PUBLIC_SECRET
   const [serverLogs, setServerLogs] = useState([])
   const [isServerRunning, setIsServerRunning] = useState(false)
 
@@ -35,6 +36,10 @@ const MinecraftServer = () => {
     })
   }, [socket])
 
+  const KeyboardCommand = () => {
+    
+  }
+
   return (
     <>
       <Head>
@@ -56,12 +61,11 @@ const MinecraftServer = () => {
         </ButtonGroup>
       </Box>
       <Box sx={{
-        borderRadius:"30px",
+        borderRadius:"30px 30px 30px 0",
         margin:"auto",
         background:"#867861",
         textAlign:"center",
         width:"80vw",
-        paddingBottom:"3vh",
         marginTop:"5vh",
         marginBottom:"5vh"
       }}>
@@ -69,20 +73,27 @@ const MinecraftServer = () => {
           borderRadius:"30px 30px 0 0",
           background:"#7a6a51",
           margin:"auto",
+          marginBottom:".5vh",
           paddingTop:"1vh",
           paddingBottom:".5vh",
           paddingLeft:"1vw",
           paddingRight:"1vw",
         }}>
-          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box this little box is a nice little box and is where I am able to vibe without fear of making others dslkfj</p>
+          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box this little box is a nice little box and is where I am able to vibe without fear of making others dissapointed yk its kinda nice to just vibedslkfj</p>
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
           <p>{serverLogs}</p>
         </Box>
-        <Box>
-          <Input width />
+        <Box sx={{
+          display:"grid"
+        }}>
+          <Input placeholder="Type a Command..." fullWidth disableUnderline={true} sx={{
+            height:"40px",
+            width:"97%",
+            marginLeft:"10px",
+          }} />
         </Box>
       </Box>
     </>

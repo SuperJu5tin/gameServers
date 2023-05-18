@@ -1,6 +1,10 @@
-const secret = "SADASDAJHKLSB"
+import dotenv  from "dotenv"
+dotenv.config()
+const secret = process.env.SECRET
 
 // file and child process things
+
+
 
 import path from 'path';
 import fs from 'fs';
@@ -171,5 +175,6 @@ io.on('connection', (_socket) => {
 });
 
 server.listen(port, () => {
+  console.log(secret)
   console.log(`listening on ${port}`);
 });
