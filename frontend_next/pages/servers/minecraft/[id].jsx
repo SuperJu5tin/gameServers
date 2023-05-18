@@ -10,12 +10,15 @@ const MinecraftServer = () => {
 
   const router = useRouter()
   const { id } = router.query
-  const server = id
+  const serverName = id
   const secret = process.env.REACT_PUBLIC_SECRET
+  const [error, setError] = useState("")
   const [serverLogs, setServerLogs] = useState([])
   const [isServerRunning, setIsServerRunning] = useState(false)
 
   const socket = io("http://localhost:5000")  
+
+  // background
 
   useEffect(() => {
     document.body.style.margin = 0
@@ -23,30 +26,73 @@ const MinecraftServer = () => {
     document.body.style.color = "white"
   }, []);
 
+  // Server Logs through socket
+
   useEffect(() => {
-    socket.on("hi", data => {
-      console.log(data.content)
+    socket.on(`minecraft-${serverName}-logs`, data => {
+      console.log(data.currentLog)
       console.log(serverLogs)
-      if (data.content !== serverLogs[serverLogs.length -1] ) {
-        setServerLogs(oldArray => [...oldArray, data.content])
+      if (data.currentLog !== serverLogs[serverLogs.length -1] ) {
+        setServerLogs(oldArray => [...oldArray, data.currentLog])
       }
     })
-    socket.on(`${server}Status`, data => {
+    socket.on(`minecraft-${serverName}-status`, data => {
       setIsServerRunning(data)
     })
   }, [socket])
 
-  const KeyboardCommand = () => {
+  const capitalizeFirstLetter = (string) => {
+    if (string) {
+      return string.charAt(0).toUpperCase() + string.slice(1);
+    }
+  }
+
+  const startServer = () => {
+    fetch(`/api/servers/minecraft/test/start`, {
+      method:'POST',
+    })
+  }
+
+  const updateServerLogs = (option) => {
+    return fetch(`http://localhost:5000/minecraft/${serverName}/${option}/${secret}`, {
+      method:'POST',
+    }).then((response) => {
+      return response.json()
+    })
+  }
+
+  const KeyboardCommand =  async (event) => {
+    if (event.key !== "Enter") {
+      return 
+    }
+
+    event.preventDefault()
+
+    if (isServerRunning) {
+      const options = {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({response:event.target.value}),
+      };
+      fetch(`minecraft/${serverName}/command/${secret}`, options)
+      setServerLogs(await updateServerLogs("logs"))
+      console.log('test3')
+    } else {
+      setError("Server Not Up")
+    }
     
+    event.target.value = ""
   }
 
   return (
     <>
       <Head>
-        <title>{server}</title>
+        <title>{capitalizeFirstLetter(serverName)}</title>
         <meta name="description" content="Game Servers" />
         <meta name="viewport" content="width=device-width, initial-scale=1" />
-        <link rel="icon" href="/favicon.ico" />
+        <link rel="icon" href="/minecraftLogo.jpg" />
       </Head>
       <Navbar />
       <Box sx={{
@@ -56,9 +102,15 @@ const MinecraftServer = () => {
         background:"linear-gradient(rgb(30, 200, 150), #756049)",
       }}>
         <ButtonGroup variant='contained'>
-          <Button>Start Server</Button>
+          <Button onClick={startServer}>Start Server</Button>
           <Button>Sdas</Button>
         </ButtonGroup>
+      </Box>
+      <Box sx={{
+        textAlign:"center",
+        color:"red"
+      }}>
+        <h1>{error}</h1>
       </Box>
       <Box sx={{
         borderRadius:"30px 30px 30px 0",
@@ -89,7 +141,7 @@ const MinecraftServer = () => {
         <Box sx={{
           display:"grid"
         }}>
-          <Input placeholder="Type a Command..." fullWidth disableUnderline={true} sx={{
+          <Input onKeyDown={KeyboardCommand} placeholder="Type a Command..." fullWidth disableUnderline={true} sx={{
             height:"40px",
             width:"97%",
             marginLeft:"10px",

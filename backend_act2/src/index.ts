@@ -54,6 +54,8 @@ const appPosts = (info) => {
   
   app.post(`/${info.type}/${info.serverName}/start/${secret}`, (_req, res) => {
 
+    console.log("test")
+
     let i = 0
     const month: number = new Date().getMonth()
     const date: number = new Date().getDate()
