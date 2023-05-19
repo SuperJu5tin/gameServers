@@ -48,17 +48,21 @@ const MinecraftServer = () => {
   }
 
   const startServer = () => {
-    fetch(`/api/servers/minecraft/test/start`, {
+    fetch(`/api/servers/minecraft/${serverName}/start`, {
       method:'POST',
     })
   }
 
-  const updateServerLogs = (option) => {
-    return fetch(`http://localhost:5000/minecraft/${serverName}/${option}/${secret}`, {
+  const getServerLogs = async () => {
+    return fetch(`/api/servers/minecraft/${serverName}/logs`, {
       method:'POST',
     }).then((response) => {
       return response.json()
     })
+  }
+
+  const updateServerLogs = () => {
+    setServerLogs(async oldArray => [...oldArray, await getServerLogs("logs")])
   }
 
   const KeyboardCommand =  async (event) => {
@@ -76,8 +80,8 @@ const MinecraftServer = () => {
         },
         body: JSON.stringify({response:event.target.value}),
       };
-      fetch(`minecraft/${serverName}/command/${secret}`, options)
-      setServerLogs(await updateServerLogs("logs"))
+      fetch(`/api/servers/minecraft/${serverName}/command`, options)
+      setServerLogs(await getServerLogs("logs"))
       console.log('test3')
     } else {
       setError("Server Not Up")
@@ -103,7 +107,7 @@ const MinecraftServer = () => {
       }}>
         <ButtonGroup variant='contained'>
           <Button onClick={startServer}>Start Server</Button>
-          <Button>Sdas</Button>
+          <Button onClick={updateServerLogs}>Sdas</Button>
         </ButtonGroup>
       </Box>
       <Box sx={{

@@ -1,0 +1,74 @@
+[21:19:46] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLServerTweaker
+[21:19:46] [main/INFO] [LaunchWrapper]: Using primary tweak class name net.minecraftforge.fml.common.launcher.FMLServerTweaker
+[21:19:46] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLServerTweaker
+[21:19:46] [main/DEBUG] [FML]: Injecting tracing printstreams for STDOUT/STDERR.
+[21:19:46] [main/INFO] [FML]: Forge Mod Loader version 14.23.5.2860 for Minecraft 1.12.2 loading
+[21:19:46] [main/INFO] [FML]: Java is OpenJDK 64-Bit Server VM, version 1.8.0_372, running on Linux:amd64:5.15.90.1-microsoft-standard-WSL2, installed at /usr/lib/jvm/java-8-openjdk/jre
+[21:19:46] [main/DEBUG] [FML]: Java classpath at launch is:
+[21:19:46] [main/DEBUG] [FML]:     server.jar
+[21:19:46] [main/DEBUG] [FML]: Java library path at launch is:
+[21:19:46] [main/DEBUG] [FML]:     /usr/java/packages/lib/amd64
+[21:19:46] [main/DEBUG] [FML]:     /usr/lib64
+[21:19:46] [main/DEBUG] [FML]:     /lib64
+[21:19:46] [main/DEBUG] [FML]:     /lib
+[21:19:46] [main/DEBUG] [FML]:     /usr/lib
+[21:19:46] [main/DEBUG] [FML]: Determined Minecraft Libraries Root: /mnt/f/Coding/Github/Multi/gameServers/backend_act2/servers_container/minecraft/servers/minecraft_hub/libraries
+[21:19:46] [main/DEBUG] [FML]: Cleaning up mods folder: ./mods
+[21:19:46] [main/DEBUG] [FML]: Enabling runtime deobfuscation
+[21:19:46] [main/DEBUG] [FML]: Instantiating coremod class FMLCorePlugin
+[21:19:46] [main/WARN] [FML]: The coremod FMLCorePlugin (net.minecraftforge.fml.relauncher.FMLCorePlugin) is not signed!
+[21:19:46] [main/DEBUG] [FML]: Added access transformer class net.minecraftforge.fml.common.asm.transformers.AccessTransformer to enqueued access transformers
+[21:19:46] [main/DEBUG] [FML]: Enqueued coremod FMLCorePlugin
+[21:19:46] [main/DEBUG] [FML]: Instantiating coremod class FMLForgePlugin
+[21:19:46] [main/WARN] [FML]: The coremod FMLForgePlugin (net.minecraftforge.classloading.FMLForgePlugin) is not signed!
+[21:19:46] [main/DEBUG] [FML]: Enqueued coremod FMLForgePlugin
+[21:19:46] [main/DEBUG] [FML]: Instantiating coremod class MagmaCorePlugin
+[21:19:46] [main/WARN] [FML]: The coremod MagmaCorePlugin (org.magmafoundation.magma.MagmaCorePlugin) is not signed!
+[21:19:47] [main/INFO] [FML]: 4 mod patches loaded!
+[21:19:47] [main/INFO] [FML]: naturessompass loaded
+[21:19:47] [main/INFO] [FML]: FastWorkBench loaded
+[21:19:47] [main/INFO] [FML]: FTB-Quest loaded
+[21:19:47] [main/INFO] [FML]: FirstAid loaded
+[21:19:47] [main/DEBUG] [FML]: Enqueued coremod MagmaCorePlugin
+[21:19:47] [main/DEBUG] [FML]: All fundamental core mods are successfully located
+[21:19:47] [main/DEBUG] [FML]: Discovering coremods
+[21:19:47] [main/INFO] [FML]: Searching /mnt/f/Coding/Github/Multi/gameServers/backend_act2/servers_container/minecraft/servers/minecraft_hub/./mods for mods
+[21:19:47] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[21:19:47] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
+[21:19:47] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[21:19:47] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLInjectionAndSortingTweaker
+[21:19:47] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[21:19:47] [main/DEBUG] [FML]: Injecting coremod FMLCorePlugin \{net.minecraftforge.fml.relauncher.FMLCorePlugin\} class transformers
+[21:19:47] [main/TRACE] [FML]: Registering transformer net.minecraftforge.fml.common.asm.transformers.SideTransformer
+[21:19:47] [main/TRACE] [FML]: Registering transformer net.minecraftforge.fml.common.asm.transformers.EventSubscriptionTransformer
+[21:19:47] [main/TRACE] [FML]: Registering transformer net.minecraftforge.fml.common.asm.transformers.EventSubscriberTransformer
+[21:19:47] [main/TRACE] [FML]: Registering transformer net.minecraftforge.fml.common.asm.transformers.SoundEngineFixTransformer
+[21:19:47] [main/DEBUG] [FML]: Injection complete
+[21:19:47] [main/DEBUG] [FML]: Running coremod plugin for FMLCorePlugin \{net.minecraftforge.fml.relauncher.FMLCorePlugin\}
+[21:19:47] [main/DEBUG] [FML]: Running coremod plugin FMLCorePlugin
+[21:19:47] [main/DEBUG] [FML]: Read 1400 binary patches
+[21:19:47] [main/DEBUG] [FML]: Loading deobfuscation resource /deobfuscation_data-1.12.2.lzma with 36083 records
+[21:19:48] [main/DEBUG] [FML]: Coremod plugin class FMLCorePlugin run successfully
+[21:19:48] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[21:19:48] [main/DEBUG] [FML]: Injecting coremod FMLForgePlugin \{net.minecraftforge.classloading.FMLForgePlugin\} class transformers
+[21:19:48] [main/DEBUG] [FML]: Injection complete
+[21:19:48] [main/DEBUG] [FML]: Running coremod plugin for FMLForgePlugin \{net.minecraftforge.classloading.FMLForgePlugin\}
+[21:19:48] [main/DEBUG] [FML]: Running coremod plugin FMLForgePlugin
+[21:19:48] [main/DEBUG] [FML]: Coremod plugin class FMLForgePlugin run successfully
+[21:19:48] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.relauncher.CoreModManager$FMLPluginWrapper
+[21:19:48] [main/DEBUG] [FML]: Injecting coremod MagmaCorePlugin \{org.magmafoundation.magma.MagmaCorePlugin\} class transformers
+[21:19:48] [main/TRACE] [FML]: Registering transformer org.magmafoundation.magma.modPatcher.patches.NaturesCompassPatch
+[21:19:48] [main/TRACE] [FML]: Registering transformer org.magmafoundation.magma.modPatcher.patches.FastBenchPatch
+[21:19:48] [main/TRACE] [FML]: Registering transformer org.magmafoundation.magma.modPatcher.patches.FTBQuestPatch
+[21:19:48] [main/TRACE] [FML]: Registering transformer org.magmafoundation.magma.modPatcher.patches.FirstAidPatch
+[21:19:48] [main/DEBUG] [FML]: Injection complete
+[21:19:48] [main/DEBUG] [FML]: Running coremod plugin for MagmaCorePlugin \{org.magmafoundation.magma.MagmaCorePlugin\}
+[21:19:48] [main/DEBUG] [FML]: Running coremod plugin MagmaCorePlugin
+[21:19:48] [main/DEBUG] [FML]: Coremod plugin class MagmaCorePlugin run successfully
+[21:19:48] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.FMLDeobfTweaker
+[21:19:48] [main/DEBUG] [FML]: Loaded 215 rules from AccessTransformer config file forge_at.cfg
+[21:19:48] [main/DEBUG] [FML]: Validating minecraft
+[21:19:48] [main/DEBUG] [FML]: Minecraft validated, launching...
+[21:19:48] [main/INFO] [LaunchWrapper]: Loading tweak class name net.minecraftforge.fml.common.launcher.TerminalTweaker
+[21:19:48] [main/INFO] [LaunchWrapper]: Calling tweak class net.minecraftforge.fml.common.launcher.TerminalTweaker
+[21:19:49] [main/INFO] [LaunchWrapper]: Launching wrapped minecraft {net.minecraft.server.MinecraftServer}

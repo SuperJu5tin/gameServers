@@ -1,0 +1,109 @@
+# This is the main configuration file for Magma.
+# 
+# Site: https://magmafoundation.org
+# Discord: https://discord.gg/magma
+# 
+# Value: console.colour.level.info Default: 2   # The colour for the info level
+# Value: console.colour.time.trace Default: e   # The colour for the trace time
+# Value: debug.debugPrintBukkitBannerPatterns Default: false   # Prints the Forge Bukkit Banner Patterns
+# Value: magma.advanced.override-brand Default: false   # Enables overriding the brand string
+# Value: bukkit.max-potion-effect-amount Default: 1024   # Maximum amount of possible potion effects (Bukkit's default is 300)
+# Value: forge.blacklistedmods.list Default:    # A list of mods to blacklist
+# Value: debug.debugPrintSounds Default: false   # Prints out all registered sounds
+# Value: console.colour.time.info Default: 2   # The colour for the info time
+# Value: console.colour.message.warning Default: e   # The colour for the warning message
+# Value: respawn-in-other-dim Default: true   # Allows players to respawn in other dimensions
+# Value: debug.debugPrintCommandNode Default: false   # Prints out all Command Nodes for permissions
+# Value: debug.debugPrintBiomes Default: false   # Prints out all registered biomes
+# Value: console.colour.time.warning Default: e   # The colour for the warning time
+# Value: auto-unload-dimensions Default: true   # Automatically unload dimensions that are not being used
+# Value: magma.auto-update Default: true   # Auto updates the Magma jar
+# Value: magma.advanced.forge-bukkit-access Default: true   # Allows Forge mods to access Bukkit plugin classes
+# Value: experience-merge-max-value Default: -1   # Instructs the server put a maximum value on experience orbs, preventing them all from merging down into 1 single orb.
+# Value: forge.bukkitPermissionHandler.enable Default: true   # Let's Bukkit permission plugins handle forge/modded commands
+# Value: console.colour.level.warning Default: e   # The colour for the warning level
+# Value: console.colour.level.fatal Default: e   # The colour for the fatal level
+# Value: forge.blacklistedmods.enabled Default: false   # Enable blacklisting of mods
+# Value: magma.messages.fml.server-still-starting Default: &cServer is still starting! Please wait before reconnecting.   # Server still starting kick message
+# Value: fakeplayer.permissions Default:    # A list of permissions that fake players should have
+# Value: console.colour.message.info Default: 2   # The colour for the info message
+# Value: magma.advanced.override-brand-string Default: SpigotMC   # Value to use for new brand string
+# Value: console.colour.level.trace Default: e   # The colour for the trace level
+# Value: console.colour.message.trace Default: e   # The colour for the trace message
+# Value: console.colour.time.error Default: c   # The colour for the error time
+# Value: magma.advanced.tooltip-priority Default: mod   # Mod, Plugin, None : determines what has tooltip priority
+# Value: magma.advanced.override-name-string Default: Spigot   # Value to use for the new name string
+# Value: console.colour.message.error Default: c   # The colour for the error message
+# Value: console.colour.time.fatal Default: e   # The colour for the fatal time
+# Value: magma.advanced.fastbench-fix Default: true   # Fixes a crash upon joining when fastworkbench is installed
+# Value: magma.advanced.override-name Default: false   # Enable overriding the name string
+# Value: magma.messages.fml.fml-required Default: &cThis Server is running Magma. Forge and additional mods are required in order to connect to this server.   # FML required kick message
+# Value: console.colour.level.error Default: c   # The colour for the error level
+# Value: bukkit.enable-reload Default: false   # Enables the reload command (not recommended)
+# Value: magma.advanced.server-type Default: FML   # Set to FML to show forge icon or BUKKIT to show bukkit icon (FML is default)
+# Value: debug.debugPrintBukkitMatterials Default: false   # Prints the Forge Bukkit Materials
+# Value: console.colour.message.fatal Default: e   # The colour for the fatal message
+# Value: forge.blacklistedmods.kickmessage Default: Please Remove Blacklisted Mods   # Mod Blacklist kick message
+# Value: magma.messages.fml.missing-mods Default: &cYou are missing the following mods:   # Missing Mods kick message
+
+console:
+  colour:
+    level:
+      info: '2'
+      warning: e
+      fatal: e
+      trace: e
+      error: c
+    time:
+      trace: e
+      info: '2'
+      warning: e
+      error: c
+      fatal: e
+    message:
+      warning: e
+      info: '2'
+      trace: e
+      error: c
+      fatal: e
+debug:
+  debugPrintBukkitBannerPatterns: false
+  debugPrintSounds: false
+  debugPrintCommandNode: false
+  debugPrintBiomes: false
+  debugPrintBukkitMatterials: false
+magma:
+  advanced:
+    override-brand: false
+    forge-bukkit-access: true
+    override-brand-string: SpigotMC
+    tooltip-priority: mod
+    override-name-string: Spigot
+    fastbench-fix: true
+    override-name: false
+    server-type: FML
+  auto-update: true
+  messages:
+    fml:
+      server-still-starting: '&cServer is still starting! Please wait before reconnecting.'
+      fml-required: '&cThis Server is running Magma. Forge and additional mods are
+        required in order to connect to this server.'
+      missing-mods: '&cYou are missing the following mods:'
+bukkit:
+  max-potion-effect-amount: 1024
+  enable-reload: false
+forge:
+  blacklistedmods:
+    list: []
+    enabled: false
+    kickmessage: Please Remove Blacklisted Mods
+  bukkitPermissionHandler:
+    enable: true
+  autoUnloadDimensionsWhitelist:
+  - 0
+respawn-in-other-dim: true
+auto-unload-dimensions: true
+experience-merge-max-value: -1
+fakeplayer:
+  permissions: []
+config-version: 2

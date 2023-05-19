@@ -9,7 +9,7 @@ const secret = process.env.SECRET
 import path from 'path';
 import fs from 'fs';
 import { WriteStream } from 'fs';
-import { spawn } from 'child_process';
+import { ChildProcessWithoutNullStreams, spawn } from 'child_process';
 
 // express + socket.io
 
@@ -48,59 +48,56 @@ serverDatabase.connect((err) => {
 
 const appPosts = (info) => {
 
-  let process
+  let process: ChildProcessWithoutNullStreams
   let currentLogs = []
   let isRunning = false
   
-  app.post(`/${info.type}/${info.serverName}/start/${secret}`, (_req, res) => {
+  const month: number = new Date().getMonth()
+  const date: number = new Date().getDate()
+  const year: number = new Date().getFullYear()
+
+  app.post(`/${info.serverType}/${info.serverName}/start/${secret}`, (_req, res) => {
 
     console.log("test")
 
     let i = 0
-    const month: number = new Date().getMonth()
-    const date: number = new Date().getDate()
-    const year: number = new Date().getFullYear()
 
     if (!isRunning) {
 
-      // if (fs.existsSync(path.join(`${__dirname}/${info.type}Logs/${info.serverName}Log.log`))) {
-      //   fs.unlink(`${__dirname}/${info.type}Logs/${info.serverName}Log.log`, (err) => {
-      //     if (err) {
-      //       throw err;
-      //     }
-      //   });
-      // }
-
-      if (fs.existsSync(path.join("database", "server_logs", info.type, info.serverName, `${month}-${date}-${year}.log`))) {
-        fs.unlink(path.join("database", "server_logs", info.type, info.serverName, `${month}-${date}-${year}.log`), (err) => {
+      if (fs.existsSync(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}.log`))) {
+        fs.unlink(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}.log`), (err) => {
           if (err) {
             throw err;
           }
         });
       }
 
-      let writeStream = fs.createWriteStream(path.join("database", "server_logs", info.type, info.serverName, `${month}-${date}-${year}.log`));
+      if (!(fs.existsSync(path.join("database", "server_logs", info.serverType, info.serverName)))) {
+        fs.mkdirSync(path.join("database", "server_logs", info.serverType, info.serverName))
+      }
 
-      process = spawn('bash', [`serverScripts/${info.type}/${info.serverName}.sh`]);
+      let writeStream = fs.createWriteStream(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}.log`));
 
-      io.emit(`${info.type}-${info.serverName}-status`, {status: true});
+      process = spawn('bash', [`servers_container/${info.serverType}/start_server_scripts/${info.serverName}.sh`]);
+
+      io.emit(`${info.serverType}-${info.serverName}-status`, {status: true});
 
       process.stdout.on('data', (data) => {
         writeStream.write(`${data.toString()}`)
-        io.emit(`${info.type}-${info.name}-logs`, {currentLog: data.toString()})
+        io.emit(`${info.serverType}-${info.name}-logs`, {currentLog: data.toString()})
         isRunning = true
       })
 
       process.stderr.on('data', (data: { toString: () => any; }) => {
         writeStream.write(`${data.toString()}`)
-        io.emit(`${info.type}-${info.name}-logs`, {currentLogs: data.toString()})
+        io.emit(`${info.serverType}-${info.name}-logs`, {currentLogs: data.toString()})
         console.error(data.toString())
       })
 
       process.on('close', (code: { toString: () => string; }) => {
         console.log('child process exited with code ' + code.toString());
         isRunning = false;
-        io.emit(`${info.type}-${info.serverName}-status`, {status: true});
+        io.emit(`${info.serverType}-${info.serverName}-status`, {status: true});
       })
 
       res.sendStatus(200)
@@ -108,8 +105,9 @@ const appPosts = (info) => {
     } else res.sendStatus(400)
   })
 
-  app.post(`/${info.type}/${info.serverName}/logs/${secret}`, (_req, res) => {
-    fs.readFile(`${__dirname}/logs/${info.type}/${info.serverName}Log.log`, 'utf8', (err, data) => {
+  app.post(`/${info.serverType}/${info.serverName}/logs/${secret}`, (_req, res) => {
+    
+    fs.readFile(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}.log`), 'utf8', (err, data) => {
       if (err) {
         console.error(err);
         return;
@@ -118,11 +116,11 @@ const appPosts = (info) => {
     });
   })
 
-  app.post(`/${info.type}/${info.serverName}/check/${secret}`, (_req, res) => {
+  app.post(`/${info.serverType}/${info.serverName}/check/${secret}`, (_req, res) => {
     res.send(isRunning)
   })
 
-  app.post(`/${info.type}/${info.serverName}/command/${secret}`, (req, res) => {
+  app.post(`/${info.serverType}/${info.serverName}/command/${secret}`, (req, res) => {
     if (isRunning) {
       console.log(req.body.response)
       process.stdin.write(`${req.body.response}\n`)
@@ -130,6 +128,7 @@ const appPosts = (info) => {
     } else {
       res.sendStatus(400)
     }
+    
   })
 }
 
@@ -152,9 +151,10 @@ type serverTyping = {
   serverType:string
 }
 
-let serverList: Array<serverTyping> = [{serverName: "vanilla119", serverType: "minecraft"}, {serverName:"", serverType:""}]
+let serverList: Array<serverTyping> = [{serverName: "minecraft_hub", serverType: "minecraft"}]
 
 for (const currentServerInfo of serverList) {
+  console.log(currentServerInfo, "created")
   appPosts(currentServerInfo)
 }
 
@@ -177,6 +177,5 @@ io.on('connection', (_socket) => {
 });
 
 server.listen(port, () => {
-  console.log(secret)
   console.log(`listening on ${port}`);
 });
