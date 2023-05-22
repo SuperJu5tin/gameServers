@@ -46,15 +46,15 @@ const appPosts = (info) => {
         console.log("test");
         let i = 0;
         if (!isRunning) {
+            if (!(fs.existsSync(path.join("database", "server_logs", info.serverType, info.serverName)))) {
+                fs.mkdirSync(path.join("database", "server_logs", info.serverType, info.serverName));
+            }
             if (fs.existsSync(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}.log`))) {
                 fs.unlink(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}.log`), (err) => {
                     if (err) {
                         throw err;
                     }
                 });
-            }
-            if (!(fs.existsSync(path.join("database", "server_logs", info.serverType, info.serverName)))) {
-                fs.mkdirSync(path.join("database", "server_logs", info.serverType, info.serverName));
             }
             let writeStream = fs.createWriteStream(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}.log`));
             process = spawn('bash', [`servers_container/${info.serverType}/start_server_scripts/${info.serverName}.sh`]);

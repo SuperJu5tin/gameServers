@@ -12,7 +12,7 @@ function Navbar() {
     }}>
         <ButtonGroup variant='text'>
           <Button href='/'> Home </Button>
-          <Button href='/servers/minecraft/stuff'> test </Button>
+          <Button href='/servers/minecraft/minecraft_hub'> Minecraft Hub </Button>
           <Button href='/servers/terraria/stuff'> terraria </Button>
         </ButtonGroup>
     </Box> 

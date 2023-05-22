@@ -7,7 +7,7 @@ export default function handler(req, res) {
   })
 
   res.status(200).json({response:true})
-  console.log(query.id, secret, `http://localhost:5000/minecraft/${query.id}/start/${secret}`)
+  // console.log(query.id, secret, `http://localhost:5000/minecraft/${query.id}/start/${secret}`)
 }
 
 export const config = {

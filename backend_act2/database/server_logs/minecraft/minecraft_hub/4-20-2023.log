@@ -1,0 +1,2 @@
+servers_container/minecraft/start_server_scripts/minecraft_hub.sh: line 3: /usr/lib/jvm/java-8-openjdk/bin/java: No such file or directory
+Hello

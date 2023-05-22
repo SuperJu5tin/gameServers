@@ -16,7 +16,7 @@ const MinecraftServer = () => {
   const [serverLogs, setServerLogs] = useState([])
   const [isServerRunning, setIsServerRunning] = useState(false)
 
-  const socket = io("http://localhost:5000")  
+  // const socket = io("http://localhost:5000")  
 
   // background
 
@@ -28,18 +28,18 @@ const MinecraftServer = () => {
 
   // Server Logs through socket
 
-  useEffect(() => {
-    socket.on(`minecraft-${serverName}-logs`, data => {
-      console.log(data.currentLog)
-      console.log(serverLogs)
-      if (data.currentLog !== serverLogs[serverLogs.length -1] ) {
-        setServerLogs(oldArray => [...oldArray, data.currentLog])
-      }
-    })
-    socket.on(`minecraft-${serverName}-status`, data => {
-      setIsServerRunning(data)
-    })
-  }, [socket])
+  // useEffect(() => {
+  //   socket.on(`minecraft-${serverName}-logs`, data => {
+  //     console.log(data.currentLog)
+  //     console.log(serverLogs)
+  //     if (data.currentLog !== serverLogs[serverLogs.length -1] ) {
+  //       setServerLogs(oldArray => [...oldArray, data.currentLog])
+  //     }
+  //   })
+  //   socket.on(`minecraft-${serverName}-status`, data => {
+  //     setIsServerRunning(data)
+  //   })
+  // }, [socket])
 
   const capitalizeFirstLetter = (string) => {
     if (string) {
@@ -54,15 +54,21 @@ const MinecraftServer = () => {
   }
 
   const getServerLogs = async () => {
-    return fetch(`/api/servers/minecraft/${serverName}/logs`, {
+    const response = await fetch(`/api/servers/minecraft/${serverName}/logs`, {
       method:'POST',
-    }).then((response) => {
-      return response.json()
     })
+
+    const resJson = await response.json()
+
+    console.log(resJson)
+    console.log(["hello", "bye"])
+
+    return await resJson
   }
 
-  const updateServerLogs = () => {
-    setServerLogs(async oldArray => [...oldArray, await getServerLogs("logs")])
+  const updateServerLogs = async () => {
+    const newLogs = await getServerLogs("logs")
+    setServerLogs(() => [...newLogs])
   }
 
   const KeyboardCommand =  async (event) => {
@@ -81,7 +87,7 @@ const MinecraftServer = () => {
         body: JSON.stringify({response:event.target.value}),
       };
       fetch(`/api/servers/minecraft/${serverName}/command`, options)
-      setServerLogs(await getServerLogs("logs"))
+      updateServerLogs()
       console.log('test3')
     } else {
       setError("Server Not Up")
@@ -140,7 +146,11 @@ const MinecraftServer = () => {
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
-          <p>{serverLogs}</p>
+          {(typeof serverLogs === []) ? (""): (serverLogs ? (
+            serverLogs.map((serverLog, i) => (
+              <p key={i}>{serverLog}</p>
+            ))
+          ): (""))}
         </Box>
         <Box sx={{
           display:"grid"

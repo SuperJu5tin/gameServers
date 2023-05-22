@@ -5,12 +5,12 @@ const handler = async (req, res) => {
 
   const response = await fetch(`http://localhost:5000/minecraft/${query.id}/logs/${secret}`, {
     method:'POST',
-  }).then((response) => {
-    return response.json()
   })
 
-  res.status(200).json(response)
-  console.log(response)
+  const resJson =  await response.json()
+
+  res.status(200).json(resJson)
+  // console.log(resJson)
 }
 export default handler
   
