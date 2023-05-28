@@ -77,8 +77,6 @@ const appPosts = (info) => {
         });
       }
 
-      
-
       let writeStream = fs.createWriteStream(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}-${minute}.log`));
 
       process = spawn('bash', [`servers_container/${info.serverType}/start_server_scripts/${info.serverName}.sh`]);

@@ -1,12 +1,14 @@
 import Navbar from '@/pages/Navbar';
-import { Button, ButtonGroup, Container, Input } from '@mui/material';
+import { Button, ButtonGroup, Container, Input, Typography } from '@mui/material';
 import { Box } from '@mui/system';
+import CheckBoxOutlinedIcon from '@mui/icons-material/CheckBoxOutlined';
+import CheckBoxOutlineBlankOutlinedIcon from '@mui/icons-material/CheckBoxOutlineBlankOutlined';
 import Head from 'next/head';
 import { useRouter } from 'next/router';
 import React, { useEffect, useState } from 'react'
 import { io } from 'socket.io-client';
 
-const MinecraftServer = () => {
+const MinecraftServer = ( props ) => {
 
   const router = useRouter()
   const { id } = router.query
@@ -14,7 +16,7 @@ const MinecraftServer = () => {
   const secret = process.env.REACT_PUBLIC_SECRET
   const [error, setError] = useState("")
   const [serverLogs, setServerLogs] = useState([])
-  const [isServerRunning, setIsServerRunning] = useState(false)
+  const [isServerRunning, setIsServerRunning] = useState(props.data.isRunning)
 
   // const socket = io("http://localhost:5000")  
 
@@ -68,7 +70,7 @@ const MinecraftServer = () => {
 
   const updateServerLogs = async () => {
     const newLogs = await getServerLogs("logs")
-    setServerLogs(() => [...newLogs])
+    setServerLogs([...newLogs])
   }
 
   const KeyboardCommand =  async (event) => {
@@ -116,6 +118,30 @@ const MinecraftServer = () => {
           <Button onClick={updateServerLogs}>Sdas</Button>
         </ButtonGroup>
       </Box>
+      {/* <div style={{
+        display: 'flex',
+        alignItems: 'center',
+        flexWrap: 'wrap',
+      }}>
+        <LinkIcon />
+        <span>revolve</span>
+      </div>  */}
+      <Box sx={{
+        borderRadius:"30px",
+        alightItems:"center",
+        margin:"auto",
+        marginTop:"30px",
+        background:"#7a6a51",
+        height:"10vh",
+        width:"80vw",
+      }}>
+        <Typography sx={{
+          display:"flex",
+          justifyContent: "center",
+          alignItems: 'center',
+          flexWrap: 'wrap',
+        }}> Sever Running: {isServerRunning ? <CheckBoxOutlinedIcon /> : <CheckBoxOutlineBlankOutlinedIcon />} </Typography>
+      </Box>
       <Box sx={{
         textAlign:"center",
         color:"red"
@@ -128,7 +154,7 @@ const MinecraftServer = () => {
         background:"#867861",
         textAlign:"center",
         width:"80vw",
-        marginTop:"5vh",
+        marginTop:"30px",
         marginBottom:"5vh"
       }}>
         <Box sx={{
@@ -140,7 +166,11 @@ const MinecraftServer = () => {
           paddingBottom:".5vh",
           paddingLeft:"1vw",
           paddingRight:"1vw",
+          height:"40vh",
+          overflowY:"auto",
         }}>
+          {props.data.test}
+          {props.data.data1 ? "1":"2"}
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box this little box is a nice little box and is where I am able to vibe without fear of making others dissapointed yk its kinda nice to just vibedslkfj</p>
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
           <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
@@ -155,25 +185,38 @@ const MinecraftServer = () => {
         <Box sx={{
           display:"grid"
         }}>
-          <Input onKeyDown={KeyboardCommand} placeholder="Type a Command..." fullWidth disableUnderline={true} sx={{
+          <Input onKeyDown={KeyboardCommand} placeholder="Type a Command..." disableUnderline={true} sx={{
             height:"40px",
             width:"97%",
             marginLeft:"10px",
           }} />
         </Box>
+        {/* scheduled command */}
       </Box>
     </>
     
   )
 }
 
-// export const getServerSideProps = async (context) => {
-//   // Fetch data from external API
-//   const res = await fetch(`http://localhost:5000/${context.query.id}`)
-//   const data = await res.json()
+export const getServerSideProps = async (context) => {
+  // Fetch data from external API
+  const serverName = context.query.id
+  const response1 = await fetch(`http://localhost:3000/api/servers/minecraft/${serverName}/check`, {
+    method:'POST',
+  })
 
-//   // Pass data to the page via props
-//   return { props: { data } }
-// }
+  const isRunning = await response1.json()
+  // console.log(data2, `http://localhost:3000/api/servers/minecraft/${serverName}/check`)
+  // const res = await fetch(`http://localhost:5000/minecraft/${context.query.id}/check/${secret}`)
+  // const data2 = await res.json()
+
+  if (isRunning) {}
+
+  // Pass data to the page via props
+  return { props: { data: {
+    isRunning,
+
+  } } }
+}
 
 export default MinecraftServer
