@@ -13,16 +13,19 @@ const MinecraftServer = ( props ) => {
   const router = useRouter()
   const { id } = router.query
   const serverName = id
-  const secret = process.env.REACT_PUBLIC_SECRET
+  // const secret = process.env.REACT_PUBLIC_SECRET
   const [error, setError] = useState("")
-  const [serverLogs, setServerLogs] = useState([])
-  const [isServerRunning, setIsServerRunning] = useState(props.data.isRunning)
+  const [serverLogs, setServerLogs] = useState(props.logs)
+  const [isServerRunning, setIsServerRunning] = useState(props.isRunning)
 
-  // const socket = io("http://localhost:5000")  
+  let placeholder = ""
+
+  const socket = io("http://localhost:5000")  
 
   // background
 
   useEffect(() => {
+    console.log(props)
     document.body.style.margin = 0
     document.body.style.background = "#756049"
     document.body.style.color = "white"
@@ -33,15 +36,20 @@ const MinecraftServer = ( props ) => {
   // useEffect(() => {
   //   socket.on(`minecraft-${serverName}-logs`, data => {
   //     console.log(data.currentLog)
-  //     console.log(serverLogs)
-  //     if (data.currentLog !== serverLogs[serverLogs.length -1] ) {
+  //     console.log(serverLogs[serverLogs.length -1])
+  //     if (data.currentLog !== placeholder ) {
   //       setServerLogs(oldArray => [...oldArray, data.currentLog])
+  //       placeholder = data.currentLog
   //     }
   //   })
   //   socket.on(`minecraft-${serverName}-status`, data => {
   //     setIsServerRunning(data)
   //   })
-  // }, [socket])
+  // }, [])
+
+  // useEffect(() => {
+  //   setServerLogs(oldArray => [...oldArray, placeholder])
+  // }, [placeholder])
 
   const capitalizeFirstLetter = (string) => {
     if (string) {
@@ -62,15 +70,12 @@ const MinecraftServer = ( props ) => {
 
     const resJson = await response.json()
 
-    console.log(resJson)
-    console.log(["hello", "bye"])
-
     return await resJson
   }
 
   const updateServerLogs = async () => {
     const newLogs = await getServerLogs("logs")
-    setServerLogs([...newLogs])
+    setServerLogs(newLogs)
   }
 
   const KeyboardCommand =  async (event) => {
@@ -90,7 +95,6 @@ const MinecraftServer = ( props ) => {
       };
       fetch(`/api/servers/minecraft/${serverName}/command`, options)
       updateServerLogs()
-      console.log('test3')
     } else {
       setError("Server Not Up")
     }
@@ -118,14 +122,6 @@ const MinecraftServer = ( props ) => {
           <Button onClick={updateServerLogs}>Sdas</Button>
         </ButtonGroup>
       </Box>
-      {/* <div style={{
-        display: 'flex',
-        alignItems: 'center',
-        flexWrap: 'wrap',
-      }}>
-        <LinkIcon />
-        <span>revolve</span>
-      </div>  */}
       <Box sx={{
         borderRadius:"30px",
         alightItems:"center",
@@ -158,9 +154,10 @@ const MinecraftServer = ( props ) => {
         marginBottom:"5vh"
       }}>
         <Box sx={{
+          display:"grid",
+          justifyItems:"left",
           borderRadius:"30px 30px 0 0",
           background:"#7a6a51",
-          margin:"auto",
           marginBottom:".5vh",
           paddingTop:"1vh",
           paddingBottom:".5vh",
@@ -169,13 +166,6 @@ const MinecraftServer = ( props ) => {
           height:"40vh",
           overflowY:"auto",
         }}>
-          {props.data.test}
-          {props.data.data1 ? "1":"2"}
-          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box this little box is a nice little box and is where I am able to vibe without fear of making others dissapointed yk its kinda nice to just vibedslkfj</p>
-          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
-          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
-          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
-          <p>aStuff adnt he things are here in this little space and this is where I like to vibe just right here in this little box</p>
           {(typeof serverLogs === []) ? (""): (serverLogs ? (
             serverLogs.map((serverLog, i) => (
               <p key={i}>{serverLog}</p>
@@ -198,25 +188,56 @@ const MinecraftServer = ( props ) => {
   )
 }
 
-export const getServerSideProps = async (context) => {
+export const getStaticProps = async (id) => {
   // Fetch data from external API
-  const serverName = context.query.id
-  const response1 = await fetch(`http://localhost:3000/api/servers/minecraft/${serverName}/check`, {
+  const serverName = "minecraft_hub"
+
+  const secret = process.env.REACT_PUBLIC_SECRET
+  
+  const response1 = await fetch(`http://localhost:5000/minecraft/${serverName}/check/${secret}`, {
     method:'POST',
   })
 
   const isRunning = await response1.json()
-  // console.log(data2, `http://localhost:3000/api/servers/minecraft/${serverName}/check`)
-  // const res = await fetch(`http://localhost:5000/minecraft/${context.query.id}/check/${secret}`)
-  // const data2 = await res.json()
+  let logs = [""]
+  
+  if (isRunning) {
+    const response2 = await fetch(`http://localhost:5000/minecraft/${serverName}/logs/${secret}`, {
+      method:'POST',
+    })
 
-  if (isRunning) {}
+    logs = await response2.json()
+  }
 
   // Pass data to the page via props
-  return { props: { data: {
+  return { props: {
     isRunning,
-
-  } } }
+    logs,
+  }}
 }
+
+export const getStaticPaths = async () => {
+
+  const secret = process.env.REACT_PUBLIC_SECRET
+  
+  const response1 = await fetch(`http://localhost:5000/server_list/${secret}`, {
+    method:'POST',
+  })
+
+  const server_list = await response1.json()
+
+  const paths = server_list.map(post => {
+    return {
+      params: {
+        id: `${post.serverName}`
+      }
+    }
+  })
+
+  return {
+    paths,
+    fallback: false, // false or "blocking"
+  };
+};
 
 export default MinecraftServer

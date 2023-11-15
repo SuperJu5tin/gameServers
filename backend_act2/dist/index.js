@@ -14,7 +14,12 @@ const jsonParser = bodyParser.json();
 const urlencodedParser = bodyParser.urlencoded({ extended: false });
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server);
+const io = new Server(server, {
+    cors: {
+        origin: "http://localhost:3000",
+        methods: ["GET", "POST"]
+    }
+});
 const port = 5000;
 // logging server
 /*
@@ -37,37 +42,45 @@ serverDatabase.connect((err) => {
 // general servers
 const appPosts = (info) => {
     let process;
-    let currentLogs = [];
     let isRunning = false;
+    let revalidateTimer;
     const minute = new Date().getMinutes();
     const month = new Date().getMonth();
     const date = new Date().getDate();
     const year = new Date().getFullYear();
+    const log_dir_path = path.join("database", "server_logs", info.serverType, info.serverName);
+    const log_file_path = path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}.log`);
+    if (!(fs.existsSync(log_dir_path))) {
+        fs.mkdirSync(log_dir_path);
+    }
+    const activateRevalidateTimer = () => {
+        clearTimeout(revalidateTimer);
+        revalidateTimer = setTimeout(() => {
+            fetch(`http://localhost:3000/api/servers/${info.serverType}/${info.serverName}/revalidate`);
+        }, 5000);
+    };
     app.post(`/${info.serverType}/${info.serverName}/start/${secret}`, (_req, res) => {
         console.log("test");
         let i = 0;
         if (!isRunning) {
-            if (!(fs.existsSync(path.join("database", "server_logs", info.serverType, info.serverName)))) {
-                fs.mkdirSync(path.join("database", "server_logs", info.serverType, info.serverName));
-            }
-            if (fs.existsSync(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}-${minute}.log`))) {
-                fs.unlink(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}-${minute}.log`), (err) => {
+            if (fs.existsSync(log_file_path)) {
+                fs.unlink(log_file_path, (err) => {
                     if (err) {
                         throw err;
                     }
                 });
             }
-            let writeStream = fs.createWriteStream(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}-${minute}.log`));
+            let writeStream = fs.createWriteStream(log_file_path);
             process = spawn('bash', [`servers_container/${info.serverType}/start_server_scripts/${info.serverName}.sh`]);
             io.emit(`${info.serverType}-${info.serverName}-status`, { status: true });
             process.stdout.on('data', (data) => {
                 writeStream.write(`${data.toString()}`);
-                io.emit(`${info.serverType}-${info.name}-logs`, { currentLog: data.toString() });
+                io.emit(`${info.serverType}-${info.serverName}-logs`, { currentLog: data.toString() });
                 isRunning = true;
             });
             process.stderr.on('data', (data) => {
                 writeStream.write(`${data.toString()}`);
-                io.emit(`${info.serverType}-${info.name}-logs`, { currentLogs: data.toString() });
+                io.emit(`${info.serverType}-${info.serverName}-logs`, { currentLogs: data.toString() });
                 console.error(data.toString());
             });
             process.on('close', (code) => {
@@ -81,7 +94,7 @@ const appPosts = (info) => {
             res.sendStatus(400);
     });
     app.post(`/${info.serverType}/${info.serverName}/logs/${secret}`, (_req, res) => {
-        fs.readFile(path.join("database", "server_logs", info.serverType, info.serverName, `${month}-${date}-${year}.log`), 'utf8', (err, data) => {
+        fs.readFile(log_file_path, 'utf8', (err, data) => {
             if (err) {
                 console.error(err);
                 return;
@@ -92,9 +105,8 @@ const appPosts = (info) => {
     app.post(`/${info.serverType}/${info.serverName}/check/${secret}`, (_req, res) => {
         res.send(isRunning);
     });
-    app.post(`/${info.serverType}/${info.serverName}/command/${secret}`, (req, res) => {
+    app.post(`/${info.serverType}/${info.serverName}/command/${secret}`, jsonParser, (req, res) => {
         if (isRunning) {
-            console.log(req.body.response);
             process.stdin.write(`${req.body.response}\n`);
             res.sendStatus(200);
         }
@@ -103,22 +115,22 @@ const appPosts = (info) => {
         }
     });
 };
-// specialized server
-const minecraftServer = (serverName) => {
-    const info = {
-        type: "minecraft",
-        serverName: serverName,
-    };
-    appPosts(info);
-};
-let serverList = [{ serverName: "minecraft_hub", serverType: "minecraft" }];
+let serverList = [{ serverName: "minecraft_hub", serverType: "minecraft", id: 1, }];
+let serverNameList = [];
 for (const currentServerInfo of serverList) {
-    console.log(currentServerInfo, "created");
+    serverNameList.push(currentServerInfo.serverName);
+}
+for (const currentServerInfo of serverList) {
+    console.log(currentServerInfo.serverName, "created");
     appPosts(currentServerInfo);
 }
-app.post(`add_server/${secret}`, (req, res) => {
-    const info = { serverName: req.body.name, serverType: req.body.type };
+app.post(`/server_list/${secret}`, (req, res) => {
+    res.send(serverList);
+});
+app.post(`/add_server/${secret}`, (req, res) => {
+    const info = { serverName: req.body.name, serverType: req.body.type, id: serverList.length + 1 };
     serverList.push(info);
+    serverNameList;
     appPosts(info);
     res.sendStatus(400);
 });
@@ -127,9 +139,6 @@ app.post(`/${secret}`, (_req, res) => {
     res.sendStatus(200);
 });
 // server startup
-io.on('connection', (_socket) => {
-    console.log('a user connected');
-});
 server.listen(port, () => {
     console.log(`listening on ${port}`);
 });

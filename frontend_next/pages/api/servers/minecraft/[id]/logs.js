@@ -1,4 +1,3 @@
-
 const handler = async (req, res) => {
   const { query } = req
   const secret = process.env.REACT_PUBLIC_SECRET
